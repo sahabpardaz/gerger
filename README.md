@@ -4,7 +4,7 @@ modern git life for gerrit
 
 ## install
 
-Clone this repo and add `bin` directory to `$PATH`
+Clone this repository and add the `bin` directory to `$PATH`
 
 ## usage
 
@@ -29,7 +29,7 @@ gerpush "<your message>"
 
 create or update change set.
 
-gerpush command create new branch named `<your-branch>--gerrit`
+`gerpush` command create a new branch named `<your-branch>--gerrit`
 
 ### gerdown
 
