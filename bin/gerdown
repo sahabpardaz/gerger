@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+GERRIT_BRANCH="$CURRENT_BRANCH--gerrit"
+DONE_BRANCH="done/$CURRENT_BRANCH"
+
+git branch -m $DONE_BRANCH
+git branch -D $GERRIT_BRANCH
+git checkout master
+git rebase origin/master

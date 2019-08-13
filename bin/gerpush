@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $(git status --porcelain) ]]; then
+  echo 'uncommited file exists'
+  exit 1
+fi
+
+# branches
+BASE=origin/master
+BASE_HASH=$(git show-ref $BASE -s)
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+MERGE_BASE=$(git merge-base $CURRENT_BRANCH $BASE)
+GERRIT_BRANCH="$CURRENT_BRANCH--gerrit"
+
+# messages
+DEFAULT_TITLE=$(git log --pretty=format:%s -1)
+TITLE=${1:-$DEFAULT_TITLE}
+BODY=$(git log --pretty=format:%s $MERGE_BASE..$CURRENT_BRANCH)
+
+OLD_COMMIT=$(git log --format=%B -n 1 $GERRIT_BRANCH) || true
+OLD_HASH=$(git log --format=%H -n 1 $GERRIT_BRANCH) || true
+OLD_ID=$(echo "$OLD_COMMIT" | awk '/Change-Id: I/{print $2}')
+
+echo "old hash" $OLD_HASH
+
+function finish() {
+  git checkout $CURRENT_BRANCH
+}
+
+trap finish EXIT
+
+git branch -f $GERRIT_BRANCH
+git checkout $GERRIT_BRANCH
+
+NEW_ID="I"$(uuidgen | git hash-object --stdin)
+
+CHENGE_ID=${OLD_ID:-$NEW_ID}
+
+CHENGE_ID_MESSAGE="Change-Id: $CHENGE_ID"
+
+git reset --soft $BASE_HASH
+git commit -m "$TITLE" -m "$BODY" -m "$CHENGE_ID_MESSAGE"
+
+git push origin HEAD:refs/for/master
