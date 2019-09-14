@@ -1,9 +1,23 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
 CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 GERRIT_BRANCH="$CURRENT_BRANCH--gerrit"
 DONE_BRANCH="done/$CURRENT_BRANCH"
 
+CURRENT_BRANCH_HASH=$(git show-ref $CURRENT_BRANCH -s)
+GERRIT_BRANCH_HASH=$(git show-ref $GERRIT_BRANCH -s)
+
+echo "if you want to revert gerdown, run following commands:"
+echo "======================================================"
+echo "git branch -f $CURRENT_BRANCH $CURRENT_BRANCH_HASH"
+echo "git branch -f $GERRIT_BRANCH $GERRIT_BRANCH_HASH"
+echo "git branch -D $DONE_BRANCH"
+echo "git checkout $CURRENT_BRANCH"
+echo "======================================================"
+
 git branch -m $DONE_BRANCH
 git branch -D $GERRIT_BRANCH
+git fetch --all
 git checkout master
 git rebase origin/master
