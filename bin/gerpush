@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source ./parse "$@"
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source "$DIR/../utils/parse.sh" "$@"
 
 if [[ $(git status --porcelain) ]]; then
   echo 'uncommited file exists'

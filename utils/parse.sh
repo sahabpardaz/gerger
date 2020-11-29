@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-
-source ./help
+echo $@
+source "${BASH_SOURCE%/*}/help.sh"
 
 MESSAGE=
+
 
 while test $# -gt 0; do
   case "$1" in
@@ -13,12 +14,12 @@ while test $# -gt 0; do
     -m|--message)
       shift
       if test $# -gt 0; then
-        export MESSAGE+="\n\n$1"
+        MESSAGE+="\n\n$1"
+        shift
       else
         echo "error: switch 'm' requires a value"
         exit 1
       fi
-      shift
       ;;
     *)
       echo "gerpush: ${1} is not a gerpush command. See 'gerpush --help'."
@@ -26,3 +27,6 @@ while test $# -gt 0; do
       ;;
   esac
 done
+
+
+export MESSAGE

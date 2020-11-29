@@ -8,7 +8,7 @@ help() {
       echo "gerpush - Push to the Git Gerrit repository"
       echo
       echo "${bold}SYNOPSIS${normal}"
-      echo "gerpush [--version][--help][-m <msg>][--no-push]"
+      echo "gerpush [--help][-m <msg>]"
       echo
       echo "${bold}OPTIONS${normal}"
       echo "-m <msg>, --message=<msg>"
