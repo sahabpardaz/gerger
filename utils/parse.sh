@@ -4,6 +4,7 @@ source "${BASH_SOURCE%/*}/help.sh"
 MESSAGE=
 NO_PUSH=false
 
+CHANGE_ID=
 
 while test $# -gt 0; do
   case "$1" in
@@ -25,6 +26,16 @@ while test $# -gt 0; do
       shift
       NO_PUSH=true
       ;;
+    --change-id)
+      shift
+      if test $# -gt 0; then
+        CHANGE_ID=$1
+        shift
+      else
+        echo "error: switch --change-id requires a vlaue"
+        exit 1
+      fi
+      ;;
     *)
       echo "gerpush: ${1} is not a gerpush command. See 'gerpush --help'."
       exit 1
@@ -35,3 +46,4 @@ done
 
 export MESSAGE
 export NO_PUSH
+export CHANGE_ID
