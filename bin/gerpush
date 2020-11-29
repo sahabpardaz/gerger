@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source ./parse.sh "$@"
+
+
 if [[ $(git status --porcelain) ]]; then
   echo 'uncommited file exists'
   exit 1
@@ -14,8 +17,8 @@ MERGE_BASE=$(git merge-base $CURRENT_BRANCH $BASE)
 GERRIT_BRANCH="$CURRENT_BRANCH--gerrit"
 
 # messages
-DEFAULT_TITLE=$(git log --pretty=format:%s -1)
-TITLE=${1:-$DEFAULT_TITLE}
+DEFAULT_MESSAGE=$(git log --pretty=format:%s -1)
+MESSAGE=${MESSAGE:-$DEFAULT_MESSAGE}
 BODY=$(git log --pretty=format:%s $MERGE_BASE..$CURRENT_BRANCH)
 
 OLD_COMMIT=$(git log --format=%B -n 1 $GERRIT_BRANCH) || true
@@ -40,6 +43,6 @@ CHENGE_ID=${OLD_ID:-$NEW_ID}
 CHENGE_ID_MESSAGE="Change-Id: $CHENGE_ID"
 
 git reset --soft $BASE_HASH
-git commit -m "$TITLE" -m "$BODY" -m "$CHENGE_ID_MESSAGE"
+git commit -m "$(printf "$MESSAGE")" -m "$BODY" -m "$CHENGE_ID_MESSAGE"
 
 git push origin HEAD:refs/for/master
