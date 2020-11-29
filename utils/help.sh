@@ -14,5 +14,8 @@ help() {
       echo "-m <msg>, --message=<msg>"
       echo "Use the given <msg> as the commit message. If multiple -m options
            are given, their values are concatenated as separate paragraphs."
+      echo 
+      echo "--no-push"
+      echo "prevents pushing to the remote."
       echo
 }

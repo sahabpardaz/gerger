@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-echo $@
 source "${BASH_SOURCE%/*}/help.sh"
 
 MESSAGE=
+NO_PUSH=false
 
 
 while test $# -gt 0; do
@@ -21,6 +21,10 @@ while test $# -gt 0; do
         exit 1
       fi
       ;;
+    --no-push)
+      shift
+      NO_PUSH=true
+      ;;
     *)
       echo "gerpush: ${1} is not a gerpush command. See 'gerpush --help'."
       exit 1
@@ -30,3 +34,4 @@ done
 
 
 export MESSAGE
+export NO_PUSH
