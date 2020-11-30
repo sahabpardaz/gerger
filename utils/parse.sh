@@ -4,7 +4,7 @@ source "${BASH_SOURCE%/*}/help.sh"
 MESSAGE=
 NO_PUSH=false
 
-CHANGE_ID=
+CHANGE_ID_OPTION=
 
 while test $# -gt 0; do
   case "$1" in
@@ -29,7 +29,7 @@ while test $# -gt 0; do
     --change-id)
       shift
       if test $# -gt 0; then
-        CHANGE_ID=$1
+        CHANGE_ID_OPTION=$1
         shift
       else
         echo "error: switch --change-id requires a vlaue"
@@ -46,4 +46,4 @@ done
 
 export MESSAGE
 export NO_PUSH
-export CHANGE_ID
+export CHANGE_ID_OPTION
