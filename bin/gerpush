@@ -45,4 +45,6 @@ CHENGE_ID_MESSAGE="Change-Id: $CHENGE_ID"
 git reset --soft $BASE_HASH
 git commit -m "$(printf "$MESSAGE")" -m "$BODY" -m "$CHENGE_ID_MESSAGE"
 
-git push origin HEAD:refs/for/master
+if [ "$NO_PUSH" = false ]; then 
+  git push origin HEAD:refs/for/master
+fi
