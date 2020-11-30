@@ -23,7 +23,7 @@ BODY=$(git log --pretty=format:%s $MERGE_BASE..$CURRENT_BRANCH)
 
 OLD_COMMIT=$(git log --format=%B -n 1 $GERRIT_BRANCH) || true
 OLD_HASH=$(git log --format=%H -n 1 $GERRIT_BRANCH) || true
-OLD_ID=$(echo "$OLD_COMMIT" | awk '/Change-Id: I/{print $2}')
+EXISTING_CHANGE_ID=$(echo "$OLD_COMMIT" | awk '/Change-Id: I/{print $2}')
 
 echo "old hash" $OLD_HASH
 
@@ -36,14 +36,15 @@ trap finish EXIT
 git branch -f $GERRIT_BRANCH
 git checkout $GERRIT_BRANCH
 
-NEW_ID="I"$(uuidgen | git hash-object --stdin)
+GENERATED_CHANGE_ID="I"$(uuidgen | git hash-object --stdin)
 
-CHENGE_ID=${OLD_ID:-$NEW_ID}
+DEFAULT_CHANGE_ID=${EXISTING_CHANGE_ID:-$GENERATED_CHANGE_ID}
+CHANGE_ID=${CHANGE_ID_OPTION:-$DEFAULT_CHANGE_ID}
 
-CHENGE_ID_MESSAGE="Change-Id: $CHENGE_ID"
+CHANGE_ID_LINE="Change-Id: $CHANGE_ID"
 
 git reset --soft $BASE_HASH
-git commit -m "$(printf "$MESSAGE")" -m "$BODY" -m "$CHENGE_ID_MESSAGE"
+git commit -m "$(printf "$MESSAGE")" -m "$BODY" -m "$CHANGE_ID_LINE"
 
 if [ "$NO_PUSH" = false ]; then 
   git push origin HEAD:refs/for/master
